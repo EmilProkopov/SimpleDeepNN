@@ -353,7 +353,7 @@ def train_model(X,
         
         params = update_params(params, grads, learning_rate)
                 
-        if print_cost and i % 20 == 0:
+        if print_cost and i % 100 == 0:
             print ("Cost after iteration %i: %f" %(i, cost))
             costs.append(cost)
             
