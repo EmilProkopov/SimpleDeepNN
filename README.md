@@ -9,8 +9,7 @@ The network is fully customizable: it's possible to set any amount of layers, nu
 In `example_of_usage.py` the above is used for training a model that recognizes digits from Keras MNIST digits classification dataset. After the model is trained its accuracy is checked and parameters are saved to a .npy file so they can be used for prediction later.
 
 Example of a learning curve:
-![img](/images/logo.png)
-Format: ![image](url)
+![img](/learning_curve.png)
 
 `nice_params.py` is an example of parameters of a trained model. It contains params of a trained model with two hidden layers:
 The input layer contains 784 neurons.
