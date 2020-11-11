@@ -7,9 +7,6 @@ import matplotlib.pyplot as plt
 
 np.random.seed(5)
 
-(X_train, Y_train), (X_test, Y_test) = mnist.load_data()
-X_test_flat = X_test.reshape((X_test.shape[0], X_test.shape[1] ** 2)).T
-
 
 def normalize(img):
     """
@@ -26,6 +23,11 @@ def normalize(img):
     normalized data sample
     """
     return img/np.max(img)
+
+
+(X_train, Y_train), (X_test, Y_test) = mnist.load_data()
+X_test_norm = np.array([normalize(img) for img in X_test])
+X_test_flat = X_test_norm.reshape((X_test.shape[0], X_test.shape[1] ** 2)).T
 
 
 def countAccuracy(nnLables, trueLables):
@@ -82,8 +84,8 @@ def train(trainSize):
                              Y_train_one_hot,
                              layers_dims,
                              activations,
-                             learning_rate = 0.4,
-                             num_iterations = 1600,
+                             learning_rate = 0.06,
+                             num_iterations = 2000,
                              print_cost=True)
     
     np.save('last_saved_params.npy', trained_params)
@@ -136,6 +138,6 @@ def main(mode,
         train(train_dataset_size)
         
 
-main('train', 1000)
+#main('train', 100)
 #main('use_last', prediction_index = 10)
-#main('use_from_file', params_file_name = "nice_params.npy")
+main('use_from_file', params_file_name = "nice_params.npy")
