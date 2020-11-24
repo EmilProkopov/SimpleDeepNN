@@ -128,3 +128,41 @@ def cost_cross_entropy_backward(A, Y):
     derivative of the cross-entrophy cost function
     """
     return - (np.divide(Y, A+safe_c) - np.divide(1 - Y, 1 - A+safe_c))
+
+
+def cost_MSE(A, Y):
+    """
+    The MSE cost function.
+
+    Parameters
+    ----------
+    A : numpy array
+        probability vector corresponding to label predictions of shape:
+        (1, number of examples)
+    Y : numpy
+        array true "label" vector of shape: (x, number of examples)
+
+    Returns
+    ----------
+    cost : number
+        MSE cost
+    """
+    m = Y.shape[1]
+    return np.sum((A - Y)**2) / m
+
+
+def cost_MSE_backward(A, Y):
+    """
+    Parameters
+    ----------
+    A : numpy array
+        probability vector, output of the forward propagation
+    Y : numpy array
+        true lables
+
+    Returns
+    ----------
+    derivative of the MSE cost function
+    """
+    m = Y.shape[1]
+    return 2 * (A-Y) / m

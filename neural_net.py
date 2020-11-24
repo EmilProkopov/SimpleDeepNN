@@ -84,7 +84,8 @@ def activation_forward(A_prev, W, b, activation):
         (size of the current layer, 1)
     activation : string
         the activation to be used in this layer, a text string:
-        "sigmoid" or "relu"
+        "sigmoid" or "relu". "none" means that this layer doesn't have an
+        activation function.
 
     Returns
     ----------
@@ -102,6 +103,10 @@ def activation_forward(A_prev, W, b, activation):
         
     elif activation == "relu":
         A, activation_cache = utils.relu(Z)
+        
+    elif activation == "none":
+        A = Z
+        activation_cache = None
     
     cache = (linear_cache, activation_cache)
 
@@ -163,6 +168,9 @@ def compute_cost(A, Y, cost_fn="cross-entrophy"):
 
     if cost_fn == "cross-entrophy":
         return utils.cost_cross_entropy(A, Y)
+    
+    elif cost_fn == 'MSE':
+        return utils.cost_MSE(A, Y)
 
 
 def linear_backward(dZ, cache):
@@ -230,11 +238,14 @@ def activation_backward(dA, cache, activation):
     
     if activation == "relu":
         dZ = utils.relu_backward(dA, activation_cache)
-        dA_prev, dW, db = linear_backward(dZ, linear_cache)
         
     elif activation == "sigmoid":
         dZ = utils.sigmoid_backward(dA, activation_cache)
-        dA_prev, dW, db = linear_backward(dZ, linear_cache)
+        
+    elif activation == "none":
+        dZ = dA
+    
+    dA_prev, dW, db = linear_backward(dZ, linear_cache)
     
     return dA_prev, dW, db
 
@@ -267,8 +278,13 @@ def model_backward(A, Y, caches, activations, cost_fn="cross-entrophy"):
     
     if cost_fn == "cross-entrophy":
         dA = utils.cost_cross_entropy_backward(A, Y)
+    
+    elif cost_fn == "MSE":
+        dA = utils.cost_MSE_backward(A, Y)
+    
     else: # Panic, just to awoid crash
         dA = 1
+
     grads["dA" + str(L+1)] = dA
     
     for l in reversed(range(1, L+1)):
@@ -335,6 +351,8 @@ def train_model(X,
         number of the learning iterations
     print_cost : boolean
         if True print the cost every 100 steps
+    cost_function : string
+        "cross-entrophy" or "MSE"
     
     Returns
     ----------
@@ -349,7 +367,7 @@ def train_model(X,
     for i in range(0, num_iterations):
         A, caches = model_forward(X, params)
         cost = compute_cost(A, Y, cost_function)
-        grads = model_backward(A, Y, caches, activations, "cross-entrophy")
+        grads = model_backward(A, Y, caches, activations, cost_function)
         
         params = update_params(params, grads, learning_rate)
                 
